@@ -17,7 +17,25 @@
         "command": "vscode-react-starter.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "views": {
+      "vscode-react-starter": [
+        {
+          "id": "vscodeReactStarterView",
+          "type": "webview",
+          "name": "VSCode React Starter"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "vscode-react-starter",
+          "title": "VSCode React Starter",
+          "icon": "media/icons/refresh.svg"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
