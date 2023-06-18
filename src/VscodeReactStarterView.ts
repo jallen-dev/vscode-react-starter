@@ -9,6 +9,8 @@ import {
   window,
 } from "vscode"
 import { getUri } from "./utils/getUri"
+import { Extension } from "./helpers/Extension"
+import { getNonce } from "./utils/getNonce"
 
 class VscodeReactStarterView implements WebviewViewProvider {
   public static readonly viewType = "vscodeReactStarterView"
@@ -58,6 +60,10 @@ class VscodeReactStarterView implements WebviewViewProvider {
   }
 
   private _getHtmlForWebview(webview: Webview) {
+    const file = "src/index.tsx"
+    const localPort = "3000"
+    const localServerUrl = `localhost:${localPort}`
+
     // The CSS file from the React build output
     const stylesUri = getUri(webview, this._extensionUri, [
       "webview-ui",
@@ -65,24 +71,62 @@ class VscodeReactStarterView implements WebviewViewProvider {
       "assets",
       "index.css",
     ])
-    // The JS file from the React build output
-    const scriptUri = getUri(webview, this._extensionUri, [
-      "webview-ui",
-      "build",
-      "assets",
-      "index.js",
-    ])
+
+    let scriptUri
+    const isProd = Extension.getInstance().isProductionMode
+    if (isProd) {
+      scriptUri = getUri(webview, this._extensionUri, [
+        "webview-ui",
+        "build",
+        "assets",
+        "index.js",
+      ])
+    } else {
+      scriptUri = `http://${localServerUrl}/${file}`
+    }
+
+    const nonce = getNonce()
+
+    const reactRefresh = /*html*/ `
+      <script type="module">
+        import RefreshRuntime from "http://localhost:3000/@react-refresh"
+        RefreshRuntime.injectIntoGlobalHook(window)
+        window.$RefreshReg$ = () => {}
+        window.$RefreshSig$ = () => (type) => type
+        window.__vite_plugin_react_preamble_installed__ = true
+      </script>`
+
+    const reactRefreshHash =
+      "sha256-HjGiRduPjIPUqpgYIIsmVtkcLmuf/iR80mv9eslzb4I="
+
+    const csp = [
+      `default-src 'none';`,
+      `script-src 'unsafe-eval' https://* ${
+        isProd
+          ? `'nonce-${nonce}'`
+          : `http://${localServerUrl} http://0.0.0.0:${localPort} '${reactRefreshHash}'`
+      }`,
+      `style-src ${webview.cspSource} 'self' 'unsafe-inline' https://*`,
+      `font-src ${webview.cspSource}`,
+      `connect-src https://* ${
+        isProd
+          ? ``
+          : `ws://${localServerUrl} ws://0.0.0.0:${localPort} http://${localServerUrl} http://0.0.0.0:${localPort}`
+      }`,
+    ]
 
     return /*html*/ `<!DOCTYPE html>
     <html lang="en">
       <head>
         <meta charset="UTF-8" />
+        <meta http-equiv="Content-Security-Policy" content="${csp.join("; ")}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="${stylesUri}">
         <title>VSCode React Starter</title>
       </head>
       <body>
         <div id="root"></div>
+        ${isProd ? "" : reactRefresh}
         <script type="module" src="${scriptUri}"></script>
       </body>
     </html>`
