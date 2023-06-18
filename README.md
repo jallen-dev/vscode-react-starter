@@ -1,71 +1,23 @@
-# vscode-react-starter README
+# What is this?
 
-This is the README for your extension "vscode-react-starter". After writing up a brief description, we recommend including the following sections.
+This is a starter project for a Visual Studio Code extension, featuring a web view container in the Activity Bar. The web view runs a React app. Vite.js is used to build the React app and to run a dev server with Hot Module Replacement, which the extension connects to when run in development mode.
 
-## Features
+Check the first few commits to see how to logically go from hello world → activity bar webview → react → HMR
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+## Credits
 
-For example if there is an image subfolder under your extension project workspace:
+Code largely copy-pasted from this [Webview UI Toolkit Sample](https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/frameworks/hello-world-react-vite)
 
-\!\[feature X\]\(images/feature-x.png\)
+The technique (and code) for connecting to a dev server in development mode was copied from [VSCode Front Matter](https://github.com/estruyf/vscode-front-matter/blob/3a0fe7b4db18ef10285f908a3a4d4efe9503afeb/src/explorerView/ExplorerView.ts)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+The only thing I had to do was fix some issues to get Vite's HMR to work inside of VS Code. That involved:
 
-## Requirements
+1. Setting the HMR host to `localhost` instead of a random generated url (default) so I could include it in the CSP.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+2. Manually inject @react-refresh (thanks to [https://github.com/vitejs/vite/issues/1984#issuecomment-778289660](https://github.com/vitejs/vite/issues/1984#issuecomment-778289660)).
 
-## Extension Settings
+# How to run
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+1. Start the dev server for the UI (React): `npm run start:webview`
 
-For example:
-
-This extension contributes the following settings:
-
-- `myExtension.enable`: Enable/disable this extension.
-- `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-- [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-- Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-- Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-- Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-- [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-- [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+2. Hit `F5`
