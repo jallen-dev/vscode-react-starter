@@ -12,7 +12,9 @@ function App() {
 
   return (
     <main>
-      <h1 className="text-lg">Hello World from React!</h1>
+      <h1 className="text-lg bg-vscode-panel-border">
+        Hello World from React!
+      </h1>
       <VSCodeButton onClick={handleHowdyClick}>Howdy!</VSCodeButton>
     </main>
   )
