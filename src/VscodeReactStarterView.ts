@@ -61,7 +61,7 @@ class VscodeReactStarterView implements WebviewViewProvider {
 
   private _getHtmlForWebview(webview: Webview) {
     const file = "src/index.tsx"
-    const localPort = "3000"
+    const localPort = "5173"
     const localServerUrl = `localhost:${localPort}`
 
     // The CSS file from the React build output
@@ -89,7 +89,7 @@ class VscodeReactStarterView implements WebviewViewProvider {
 
     const reactRefresh = /*html*/ `
       <script type="module">
-        import RefreshRuntime from "http://localhost:3000/@react-refresh"
+        import RefreshRuntime from "http://localhost:5173/@react-refresh"
         RefreshRuntime.injectIntoGlobalHook(window)
         window.$RefreshReg$ = () => {}
         window.$RefreshSig$ = () => (type) => type
@@ -97,7 +97,7 @@ class VscodeReactStarterView implements WebviewViewProvider {
       </script>`
 
     const reactRefreshHash =
-      "sha256-HjGiRduPjIPUqpgYIIsmVtkcLmuf/iR80mv9eslzb4I="
+      "sha256-YmMpkm5ow6h+lfI3ZRp0uys+EUCt6FOyLkJERkfVnTY="
 
     const csp = [
       `default-src 'none';`,
